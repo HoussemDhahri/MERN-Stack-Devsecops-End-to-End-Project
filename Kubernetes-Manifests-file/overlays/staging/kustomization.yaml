@@ -25,4 +25,5 @@ images:
   newName: houssemdhahri93/todolist-backend
   newTag: v1.0.0
 - name: houssemdhahri93/todolist-frontend
+  newName: houssemdhahri93/todolist-frontend
   newTag: v1.0.0
