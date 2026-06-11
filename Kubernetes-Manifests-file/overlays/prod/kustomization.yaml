@@ -8,6 +8,9 @@ resources:
 
 namespace: todolist-prod
 
+patches:
+  - path: ingress-patch.yaml
+
 replicas:
   - name: todolist-frontend
     count: 3
