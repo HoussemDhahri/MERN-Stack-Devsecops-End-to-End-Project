@@ -3,14 +3,19 @@ kind: Application
 metadata:
   name: todolist-app
   namespace: argocd
+
 spec:
+  project: default
+
   source:
     repoURL: https://github.com/HoussemDhahri/MERN-Stack-Devsecops-End-to-End-Project.git
     targetRevision: main
     path: Kubernetes-Manifests-file/argocd/applications
+
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
+
   syncPolicy:
     automated:
       prune: true
