@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todolist-backend
+  labels:
+    app: todolist
+    component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todolist
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: todolist
+        component: backend
+    spec:
+      containers:
+        - name: backend
+          image: houssemdhahri93/todolist-backend
+          ports:
+            - containerPort: 3500
+          env:
+            - name: PORT
+              value: "3500"
+            - name: MONGO_CONN_STR
+              valueFrom:
+                configMapKeyRef:
+                  name: todolist-backend-config
+                  key: MONGO_CONN_STR
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"

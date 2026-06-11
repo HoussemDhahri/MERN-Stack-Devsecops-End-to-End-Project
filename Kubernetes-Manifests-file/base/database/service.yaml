@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: todolist-database
+  labels:
+    app: todolist
+    component: database
+spec:
+  selector:
+    app: todolist
+    component: database
+  ports:
+    - port: 27017
+      targetPort: 27017
+  clusterIP: None
