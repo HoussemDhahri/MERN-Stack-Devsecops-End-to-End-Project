@@ -30,8 +30,8 @@ spec:
                   key: REACT_APP_BACKEND_URL
           resources:
             requests:
-              cpu: "32m"
-              memory: "25Mi"
+              cpu: "100m"
+              memory: "256Mi"
             limits:
-              cpu: "128m"
-              memory: "100Mi"
+              cpu: "500m"
+              memory: "512Mi"
