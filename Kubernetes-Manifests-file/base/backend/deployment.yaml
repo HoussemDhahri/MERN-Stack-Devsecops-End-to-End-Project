@@ -27,8 +27,8 @@ spec:
               value: "3500"
             - name: MONGO_CONN_STR
               valueFrom:
-                configMapKeyRef:
-                  name: todolist-backend-config
+                secretKeyRef:
+                  name: mongodb-uri-secret
                   key: MONGO_CONN_STR
           resources:
             requests:

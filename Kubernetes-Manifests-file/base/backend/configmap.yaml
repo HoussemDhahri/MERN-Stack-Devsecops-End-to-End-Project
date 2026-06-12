@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: todolist-backend-config
 data:
-  MONGO_CONN_STR: mongodb://todolist-database:27017/todoapp
+  MONGO_CONN_STR: todolistdb
