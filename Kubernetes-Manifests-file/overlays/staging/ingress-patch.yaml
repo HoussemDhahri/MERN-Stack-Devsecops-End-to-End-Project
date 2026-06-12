@@ -11,13 +11,13 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: frontend
+                name: todolist-frontend
                 port:
                   number: 3000
           - path: /api
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: todolist-backend
                 port:
                   number: 3500
