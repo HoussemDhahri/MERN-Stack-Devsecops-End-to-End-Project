@@ -53,7 +53,7 @@ pipeline {
         PROD_URL    = 'http://myapp-prod.local'
 
         GIT_USER_NAME  = 'Houssem Dhahri'
-        GIT_USER_EMAIL = 'my-to-do-list@pipeline.local'
+        GIT_USER_EMAIL = 'todolist@pipeline.local'
         GITOPS_BRANCH  = 'main'
         
     }
