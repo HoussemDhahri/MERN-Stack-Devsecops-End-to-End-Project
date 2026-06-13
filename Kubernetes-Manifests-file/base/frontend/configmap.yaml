@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: todolist-frontend-config
 data:
-  REACT_APP_BACKEND_URL: http://todolist-backend:3500/api/tasks
+  REACT_APP_BACKEND_URL: http://myapp-staging.local/api/tasks
