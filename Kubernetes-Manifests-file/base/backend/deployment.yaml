@@ -25,11 +25,13 @@ spec:
           env:
             - name: PORT
               value: "3500"
+
             - name: MONGO_CONN_STR
               valueFrom:
                 secretKeyRef:
-                  name: mongodb-uri-secret
+                  name: mongodb-secret
                   key: MONGO_CONN_STR
+
           resources:
             requests:
               cpu: "32m"

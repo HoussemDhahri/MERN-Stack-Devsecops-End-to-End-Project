@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: todolist-backend-config
-data:
-  MONGO_CONN_STR: todolistdb
