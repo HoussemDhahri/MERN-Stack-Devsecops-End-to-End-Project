@@ -11,4 +11,4 @@ spec:
     component: mongo-express
   ports:
     - port: 8082
-      targetPort: 8082
+      targetPort: 8081
