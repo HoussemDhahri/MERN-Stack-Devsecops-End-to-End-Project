@@ -4,30 +4,36 @@ metadata:
   name: frontend-ingress
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/proxy-pass-headers: "X-Forwarded-Prefix"
 spec:
   ingressClassName: nginx
   rules:
     - host: myapp-staging.local
       http:
         paths:
-          - path: /api(/|$)(.*)
-            pathType: ImplementationSpecific
+          - path: /health
+            pathType: Prefix
+            backend:
+              service:
+                name: todolist-frontend
+                port:
+                  number: 3000
+          - path: /api
+            pathType: Prefix
             backend:
               service:
                 name: todolist-backend
                 port:
                   number: 3500
-          - path: /mongo-express(/|$)(.*)
-            pathType: ImplementationSpecific
+          - path: /mongo-express
+            pathType: Prefix
             backend:
               service:
                 name: mongo-express-service
                 port:
-                  number: 8082
-          - path: /(/|$)(.*)
-            pathType: ImplementationSpecific
+                  number: 8081
+          - path: /
+            pathType: Prefix
             backend:
               service:
                 name: todolist-frontend
