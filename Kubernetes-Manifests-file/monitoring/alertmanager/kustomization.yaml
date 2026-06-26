@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - telegram-bot-secret.yaml
+
+configMapGenerator:
+  - name: alertmanager-config
+    files:
+      - files/alertmanager.yaml
+      - files/telegram.tmpl
+
+generatorOptions:
+  disableNameSuffixHash: true

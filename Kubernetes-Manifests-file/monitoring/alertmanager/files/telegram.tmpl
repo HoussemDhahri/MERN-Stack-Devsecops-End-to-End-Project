@@ -1,0 +1,7 @@
+{{ define "telegram.message" }}
+🚨 <b>{{ .CommonAnnotations.summary }}</b>
+
+🔥 Severity: {{ .CommonLabels.severity }}
+📦 Alert: {{ .CommonLabels.alertname }}
+
+{{ end }}
