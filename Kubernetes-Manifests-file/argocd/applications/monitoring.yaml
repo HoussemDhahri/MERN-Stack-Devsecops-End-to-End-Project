@@ -3,11 +3,13 @@ kind: Application
 metadata:
   name: monitoring
   namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
 
   sources:
-    # 📊 Prometheus stack (Helm)
+    # Source 1: kube-prometheus-stack Helm chart (من repo خارجي)
     - repoURL: https://prometheus-community.github.io/helm-charts
       chart: kube-prometheus-stack
       targetRevision: 58.0.0
@@ -15,15 +17,15 @@ spec:
         valueFiles:
           - $values/Kubernetes-Manifests-file/monitoring/helm/values.yaml
 
-    # 📁 Git repo reference
+    # Source 2: نفس git repo متاعك - مرجع فقط لـ values.yaml
     - repoURL: https://github.com/HoussemDhahri/MERN-Stack-Devsecops-End-to-End-Project.git
       targetRevision: main
       ref: values
 
-    # 🚨 Alertmanager
+    # Source 3: kustomize resources (secrets, rules, servicemonitors, dashboards)
     - repoURL: https://github.com/HoussemDhahri/MERN-Stack-Devsecops-End-to-End-Project.git
       targetRevision: main
-      path: Kubernetes-Manifests-file/monitoring/alertmanager
+      path: Kubernetes-Manifests-file/monitoring
 
   destination:
     server: https://kubernetes.default.svc
@@ -34,5 +36,5 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-      - CreateNamespace=true
       - ServerSideApply=true
+      - CreateNamespace=false

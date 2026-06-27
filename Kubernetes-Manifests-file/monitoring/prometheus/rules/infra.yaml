@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: infra-rules
+spec:
+  groups:
+    - name: infra.rules
+      rules:
+        - alert: NodeHighCPU
+          expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Node CPU usage high"
+            description: "CPU usage above 85% for 10 minutes."
+
+        - alert: NodeLowMemory
+          expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 < 15
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Node memory low"
+            description: "Available memory below 15%."

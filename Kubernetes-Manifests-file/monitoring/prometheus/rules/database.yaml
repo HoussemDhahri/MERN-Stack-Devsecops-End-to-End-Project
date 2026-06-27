@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: database-rules
+spec:
+  groups:
+    - name: database.rules
+      rules:
+        - alert: MongoDown
+          expr: up{job="todolist-database"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "MongoDB is down"
+            description: "Prometheus can't scrape todolist-database for 2 minutes."

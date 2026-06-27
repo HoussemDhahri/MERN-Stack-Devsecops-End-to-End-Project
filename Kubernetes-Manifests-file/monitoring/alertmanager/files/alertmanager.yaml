@@ -28,4 +28,4 @@ receivers:
         message: '{{ template "telegram.message" . }}'
 
 templates:
-  - /etc/alertmanager/config/telegram.tmpl
+  - /etc/alertmanager/config/*.tmpl

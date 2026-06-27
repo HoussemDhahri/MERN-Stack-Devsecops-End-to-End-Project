@@ -5,10 +5,10 @@ resources:
   - telegram-bot-secret.yaml
 
 configMapGenerator:
-  - name: alertmanager-config
+  - name: alertmanager-monitoring-kube-prometheus-alertmanager
     files:
-      - files/alertmanager.yaml
-      - files/telegram.tmpl
+      - alertmanager.yaml=files/alertmanager.yaml
+      - telegram.tmpl=files/telegram.tmpl
 
 generatorOptions:
   disableNameSuffixHash: true
