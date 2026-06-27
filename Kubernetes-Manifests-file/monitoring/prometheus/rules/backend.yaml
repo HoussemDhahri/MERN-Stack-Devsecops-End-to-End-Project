@@ -1,0 +1,25 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: backend-rules
+spec:
+  groups:
+    - name: backend.rules
+      rules:
+        - alert: BackendHighErrorRate
+          expr: rate(http_requests_total{job="todolist-backend",status=~"5.."}[5m]) > 0.05
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Backend 5xx error rate high"
+            description: "More than 5% of requests are failing with 5xx errors."
+
+        - alert: BackendDown
+          expr: up{job="todolist-backend"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Backend is down"
+            description: "Prometheus can't scrape todolist-backend for 2 minutes."

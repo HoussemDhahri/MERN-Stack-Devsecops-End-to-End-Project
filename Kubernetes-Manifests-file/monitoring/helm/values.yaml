@@ -6,7 +6,7 @@ alertmanager:
     replicas: 1
     secrets:
       - alertmanager-telegram-token
-    configSecret: alertmanager-monitoring-kube-prometheus-alertmanager
+    configSecret: alertmanager-custom-config
 
 grafana:
   admin:
