@@ -4,11 +4,10 @@ kind: Kustomization
 resources:
   - telegram-bot-secret.yaml
 
-configMapGenerator:
-  - name: alertmanager-monitoring-kube-prometheus-alertmanager
+secretGenerator:
+  - name: alertmanager-custom-config
     files:
       - alertmanager.yaml=files/alertmanager.yaml
       - telegram.tmpl=files/telegram.tmpl
-
-generatorOptions:
-  disableNameSuffixHash: true
+    options:
+      disableNameSuffixHash: true
