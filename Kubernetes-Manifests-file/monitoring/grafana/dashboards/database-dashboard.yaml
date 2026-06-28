@@ -8,7 +8,82 @@ data:
   database-dashboard.json: |
     {
       "title": "Todolist Database",
-      "panels": [],
+      "tags": ["todolist"],
+      "timezone": "browser",
       "schemaVersion": 39,
-      "version": 1
+      "version": 1,
+      "refresh": "30s",
+      "time": { "from": "now-6h", "to": "now" },
+      "templating": {
+        "list": [
+          {
+            "name": "datasource",
+            "type": "datasource",
+            "query": "prometheus",
+            "current": {},
+            "hide": 0
+          }
+        ]
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "MongoDB Status (Up/Down)",
+          "type": "stat",
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+          "targets": [
+            { "expr": "up{job=\"todolist-database\"}", "legendFormat": "{{pod}}" }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [
+                { "type": "value", "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } } }
+              ],
+              "thresholds": { "steps": [{ "color": "red", "value": 0 }, { "color": "green", "value": 1 }] }
+            }
+          }
+        },
+        {
+          "id": 2,
+          "title": "Current Connections",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "gridPos": { "x": 6, "y": 0, "w": 18, "h": 8 },
+          "targets": [
+            { "expr": "mongodb_connections{state=\"current\"}", "legendFormat": "current connections" }
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Operations Rate (insert/query/update/delete)",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+          "targets": [
+            { "expr": "rate(mongodb_op_counters_total[5m])", "legendFormat": "{{type}}" }
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Memory Usage (Resident)",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+          "targets": [
+            { "expr": "mongodb_memory{type=\"resident\"}", "legendFormat": "resident memory (MB)" }
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Network Traffic (in/out)",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "gridPos": { "x": 0, "y": 16, "w": 24, "h": 8 },
+          "targets": [
+            { "expr": "rate(mongodb_network_bytes_total[5m])", "legendFormat": "{{state}}" }
+          ],
+          "fieldConfig": { "defaults": { "unit": "bytes" } }
+        }
+      ]
     }

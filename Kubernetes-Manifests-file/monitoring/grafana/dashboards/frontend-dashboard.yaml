@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-frontend
+  labels:
+    grafana_dashboard: "1"
+data:
+  frontend-dashboard.json: |
+    {
+      "title": "Todolist Frontend & Infra",
+      "tags": ["todolist"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "30s",
+      "time": { "from": "now-6h", "to": "now" },
+      "templating": {
+        "list": [
+          {
+            "name": "datasource",
+            "type": "datasource",
+            "query": "prometheus",
+            "current": {},
+            "hide": 0
+          }
+        ]
+      },
+      "panels": [
+        {
+          "id": 1,
+          "title": "Current vs Max Replicas (HPA)",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+          "targets": [
+            { "expr": "kube_horizontalpodautoscaler_status_current_replicas{horizontalpodautoscaler=\"todolist-frontend-hpa\"}", "legendFormat": "current replicas" },
+            { "expr": "kube_horizontalpodautoscaler_spec_max_replicas{horizontalpodautoscaler=\"todolist-frontend-hpa\"}", "legendFormat": "max replicas" }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Pod CPU Usage",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+          "targets": [
+            { "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"todolist-staging\",pod=~\"todolist-frontend.*\"}[5m])) by (pod)", "legendFormat": "{{pod}}" }
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Pod Memory Usage",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+          "targets": [
+            { "expr": "sum(container_memory_working_set_bytes{namespace=\"todolist-staging\",pod=~\"todolist-frontend.*\"}) by (pod)", "legendFormat": "{{pod}}" }
+          ],
+          "fieldConfig": { "defaults": { "unit": "bytes" } }
+        },
+        {
+          "id": 4,
+          "title": "Pod Restarts",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "${datasource}" },
+          "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+          "targets": [
+            { "expr": "kube_pod_container_status_restarts_total{namespace=\"todolist-staging\",pod=~\"todolist-frontend.*\"}", "legendFormat": "{{pod}}" }
+          ]
+        }
+      ]
+    }

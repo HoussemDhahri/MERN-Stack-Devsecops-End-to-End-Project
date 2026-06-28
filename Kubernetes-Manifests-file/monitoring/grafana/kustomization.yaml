@@ -5,3 +5,4 @@ resources:
   - grafana-admin-secret.yaml
   - dashboards/backend-dashboard.yaml
   - dashboards/database-dashboard.yaml
+  - dashboards/frontend-dashboard.yaml
