@@ -6,11 +6,39 @@ const cors = require("cors");
 const express = require("express");
 const app = express();
 const mongoose = require('mongoose');
+const promClient = require('prom-client');
 
 connection();
 
 app.use(express.json());
 app.use(cors());
+
+// ⬇️ Prometheus metrics setup
+promClient.collectDefaultMetrics();
+
+const httpRequestsTotal = new promClient.Counter({
+    name: 'http_requests_total',
+    help: 'Total number of HTTP requests',
+    labelNames: ['method', 'route', 'status']
+});
+
+// ⬇️ Middleware routes
+app.use((req, res, next) => {
+    res.on('finish', () => {
+        httpRequestsTotal.inc({
+            method: req.method,
+            route: req.route ? req.route.path : req.path,
+            status: res.statusCode
+        });
+    });
+    next();
+});
+
+// ⬇️ Endpoint Prometheus
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', promClient.register.contentType);
+    res.end(await promClient.register.metrics());
+});
 
 // Health check endpoints
 
