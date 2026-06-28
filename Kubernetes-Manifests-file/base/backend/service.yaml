@@ -10,7 +10,8 @@ spec:
     app: todolist
     component: backend
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 3500
       targetPort: 3500
   type: ClusterIP

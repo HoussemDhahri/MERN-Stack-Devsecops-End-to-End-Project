@@ -10,7 +10,8 @@ spec:
     app: todolist
     component: database
   ports:
-    - protocol: TCP
+    - name: mongodb
+      protocol: TCP
       port: 27017
       targetPort: 27017
   type: ClusterIP
