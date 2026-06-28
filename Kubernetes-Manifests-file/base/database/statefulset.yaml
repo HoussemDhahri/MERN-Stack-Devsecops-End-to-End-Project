@@ -56,6 +56,32 @@ spec:
             - name: mongodb-data
               mountPath: /data/db
 
+        - name: mongodb-exporter
+          image: percona/mongodb_exporter:0.40
+          args:
+            - "--mongodb.uri=mongodb://$(MONGO_INITDB_ROOT_USERNAME):$(MONGO_INITDB_ROOT_PASSWORD)@localhost:27017/admin"
+          ports:
+            - containerPort: 9216
+              name: metrics
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: MONGO_INITDB_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: MONGO_INITDB_ROOT_PASSWORD
+          resources:
+            requests:
+              cpu: "20m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"
+
   volumeClaimTemplates:
     - metadata:
         name: mongodb-data
