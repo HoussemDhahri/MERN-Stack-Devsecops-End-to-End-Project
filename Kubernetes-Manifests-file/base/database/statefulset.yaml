@@ -59,7 +59,8 @@ spec:
         - name: mongodb-exporter
           image: percona/mongodb_exporter:0.40
           args:
-            - "--mongodb.uri=mongodb://$(MONGO_INITDB_ROOT_USERNAME):$(MONGO_INITDB_ROOT_PASSWORD)@localhost:27017/admin"
+            - "--mongodb.uri=mongodb://$(MONGO_INITDB_ROOT_USERNAME):$(MONGO_INITDB_ROOT_PASSWORD)@127.0.0.1:27017/admin"
+            - "--collect-all"
           ports:
             - containerPort: 9216
               name: metrics
