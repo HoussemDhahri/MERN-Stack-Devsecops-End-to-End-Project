@@ -22,6 +22,20 @@ data:
             "query": "prometheus",
             "current": {},
             "hide": 0
+          },
+          {
+            "name": "namespace",
+            "type": "query",
+            "datasource": { "type": "prometheus", "uid": "${datasource}" },
+            "refresh": 1,
+            "definition": "label_values(up, namespace)",
+            "query": {
+              "query": "label_values(up, namespace)",
+              "refId": "PrometheusVariableQueryEditor-VariableQuery"
+            },
+            "multi": false,
+            "includeAll": false,
+            "current": {}
           }
         ]
       },
@@ -33,14 +47,28 @@ data:
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
           "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
           "targets": [
-            { "expr": "up{job=\"todolist-database\"}", "legendFormat": "{{pod}}" }
+            {
+              "expr": "up{job=\"todolist-database\",namespace=\"$namespace\"}",
+              "legendFormat": "{{pod}}"
+            }
           ],
           "fieldConfig": {
             "defaults": {
               "mappings": [
-                { "type": "value", "options": { "0": { "text": "DOWN", "color": "red" }, "1": { "text": "UP", "color": "green" } } }
+                {
+                  "type": "value",
+                  "options": {
+                    "0": { "text": "DOWN", "color": "red" },
+                    "1": { "text": "UP", "color": "green" }
+                  }
+                }
               ],
-              "thresholds": { "steps": [{ "color": "red", "value": 0 }, { "color": "green", "value": 1 }] }
+              "thresholds": {
+                "steps": [
+                  { "color": "red", "value": 0 },
+                  { "color": "green", "value": 1 }
+                ]
+              }
             }
           }
         },
@@ -51,7 +79,14 @@ data:
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
           "gridPos": { "x": 6, "y": 0, "w": 18, "h": 8 },
           "targets": [
-            { "expr": "mongodb_connections{state=\"current\"}", "legendFormat": "current connections" }
+            {
+              "expr": "mongodb_ss_connections{namespace=\"$namespace\",conn_type=\"current\"}",
+              "legendFormat": "current connections"
+            },
+            {
+              "expr": "mongodb_ss_connections{namespace=\"$namespace\",conn_type=\"active\"}",
+              "legendFormat": "active connections"
+            }
           ]
         },
         {
@@ -61,7 +96,10 @@ data:
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
           "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
           "targets": [
-            { "expr": "rate(mongodb_op_counters_total[5m])", "legendFormat": "{{type}}" }
+            {
+              "expr": "rate(mongodb_ss_opcounters{namespace=\"$namespace\",legacy_op_type=~\"insert|query|update|delete\"}[5m])",
+              "legendFormat": "{{legacy_op_type}}"
+            }
           ]
         },
         {
@@ -71,8 +109,16 @@ data:
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
           "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
           "targets": [
-            { "expr": "mongodb_memory{type=\"resident\"}", "legendFormat": "resident memory (MB)" }
-          ]
+            {
+              "expr": "mongodb_ss_mem_resident{namespace=\"$namespace\"}",
+              "legendFormat": "resident memory (MB)"
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "decmbytes"
+            }
+          }
         },
         {
           "id": 5,
@@ -81,9 +127,20 @@ data:
           "datasource": { "type": "prometheus", "uid": "${datasource}" },
           "gridPos": { "x": 0, "y": 16, "w": 24, "h": 8 },
           "targets": [
-            { "expr": "rate(mongodb_network_bytes_total[5m])", "legendFormat": "{{state}}" }
+            {
+              "expr": "rate(mongodb_ss_network_bytesIn{namespace=\"$namespace\"}[5m])",
+              "legendFormat": "bytes in"
+            },
+            {
+              "expr": "rate(mongodb_ss_network_bytesOut{namespace=\"$namespace\"}[5m])",
+              "legendFormat": "bytes out"
+            }
           ],
-          "fieldConfig": { "defaults": { "unit": "bytes" } }
+          "fieldConfig": {
+            "defaults": {
+              "unit": "bytes"
+            }
+          }
         }
       ]
     }

@@ -6,6 +6,7 @@ spec:
   namespaceSelector:
     matchNames:
       - todolist-staging
+      - todolist-prod
   selector:
     matchLabels:
       app: todolist
